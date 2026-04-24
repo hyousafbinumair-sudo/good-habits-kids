@@ -3,7 +3,7 @@ import { MemoryGame } from "@/games/MemoryGame";
 import { SortGame } from "@/games/SortGame";
 import { SpotGame } from "@/games/SpotGame";
 
-const GAMES: Record<string, { title: string; description: string; component: () => JSX.Element }> = {
+const GAMES: Record<string, { title: string; description: string; component: () => React.ReactElement }> = {
   memory: {
     title: "Memory Match",
     description: "Flip cards and find matching pairs as fast as you can.",

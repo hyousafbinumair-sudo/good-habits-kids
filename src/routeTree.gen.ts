@@ -9,13 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as BadgesRouteImport } from './routes/badges'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GamesIndexRouteImport } from './routes/games.index'
 import { Route as CoursesIndexRouteImport } from './routes/courses.index'
+import { Route as GamesGameIdRouteImport } from './routes/games.$gameId'
 import { Route as CoursesCourseIdIndexRouteImport } from './routes/courses.$courseId.index'
 import { Route as CoursesCourseIdLessonIdRouteImport } from './routes/courses.$courseId.$lessonId'
 
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -31,9 +39,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesIndexRoute = GamesIndexRouteImport.update({
+  id: '/games/',
+  path: '/games/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CoursesIndexRoute = CoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GamesGameIdRoute = GamesGameIdRouteImport.update({
+  id: '/games/$gameId',
+  path: '/games/$gameId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesCourseIdIndexRoute = CoursesCourseIdIndexRouteImport.update({
@@ -51,7 +69,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/profile': typeof ProfileRoute
+  '/quiz': typeof QuizRoute
+  '/games/$gameId': typeof GamesGameIdRoute
   '/courses/': typeof CoursesIndexRoute
+  '/games/': typeof GamesIndexRoute
   '/courses/$courseId/$lessonId': typeof CoursesCourseIdLessonIdRoute
   '/courses/$courseId/': typeof CoursesCourseIdIndexRoute
 }
@@ -59,7 +80,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/profile': typeof ProfileRoute
+  '/quiz': typeof QuizRoute
+  '/games/$gameId': typeof GamesGameIdRoute
   '/courses': typeof CoursesIndexRoute
+  '/games': typeof GamesIndexRoute
   '/courses/$courseId/$lessonId': typeof CoursesCourseIdLessonIdRoute
   '/courses/$courseId': typeof CoursesCourseIdIndexRoute
 }
@@ -68,7 +92,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/badges': typeof BadgesRoute
   '/profile': typeof ProfileRoute
+  '/quiz': typeof QuizRoute
+  '/games/$gameId': typeof GamesGameIdRoute
   '/courses/': typeof CoursesIndexRoute
+  '/games/': typeof GamesIndexRoute
   '/courses/$courseId/$lessonId': typeof CoursesCourseIdLessonIdRoute
   '/courses/$courseId/': typeof CoursesCourseIdIndexRoute
 }
@@ -78,7 +105,10 @@ export interface FileRouteTypes {
     | '/'
     | '/badges'
     | '/profile'
+    | '/quiz'
+    | '/games/$gameId'
     | '/courses/'
+    | '/games/'
     | '/courses/$courseId/$lessonId'
     | '/courses/$courseId/'
   fileRoutesByTo: FileRoutesByTo
@@ -86,7 +116,10 @@ export interface FileRouteTypes {
     | '/'
     | '/badges'
     | '/profile'
+    | '/quiz'
+    | '/games/$gameId'
     | '/courses'
+    | '/games'
     | '/courses/$courseId/$lessonId'
     | '/courses/$courseId'
   id:
@@ -94,7 +127,10 @@ export interface FileRouteTypes {
     | '/'
     | '/badges'
     | '/profile'
+    | '/quiz'
+    | '/games/$gameId'
     | '/courses/'
+    | '/games/'
     | '/courses/$courseId/$lessonId'
     | '/courses/$courseId/'
   fileRoutesById: FileRoutesById
@@ -103,13 +139,23 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BadgesRoute: typeof BadgesRoute
   ProfileRoute: typeof ProfileRoute
+  QuizRoute: typeof QuizRoute
+  GamesGameIdRoute: typeof GamesGameIdRoute
   CoursesIndexRoute: typeof CoursesIndexRoute
+  GamesIndexRoute: typeof GamesIndexRoute
   CoursesCourseIdLessonIdRoute: typeof CoursesCourseIdLessonIdRoute
   CoursesCourseIdIndexRoute: typeof CoursesCourseIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -131,11 +177,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games/': {
+      id: '/games/'
+      path: '/games'
+      fullPath: '/games/'
+      preLoaderRoute: typeof GamesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/courses/': {
       id: '/courses/'
       path: '/courses'
       fullPath: '/courses/'
       preLoaderRoute: typeof CoursesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/games/$gameId': {
+      id: '/games/$gameId'
+      path: '/games/$gameId'
+      fullPath: '/games/$gameId'
+      preLoaderRoute: typeof GamesGameIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses/$courseId/': {
@@ -159,7 +219,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BadgesRoute: BadgesRoute,
   ProfileRoute: ProfileRoute,
+  QuizRoute: QuizRoute,
+  GamesGameIdRoute: GamesGameIdRoute,
   CoursesIndexRoute: CoursesIndexRoute,
+  GamesIndexRoute: GamesIndexRoute,
   CoursesCourseIdLessonIdRoute: CoursesCourseIdLessonIdRoute,
   CoursesCourseIdIndexRoute: CoursesCourseIdIndexRoute,
 }
