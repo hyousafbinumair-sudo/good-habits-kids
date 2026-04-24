@@ -1,20 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { COURSES, type QuizQ } from "@/lib/courses";
 import { addStars, unlockBadge } from "@/lib/progress";
 import { celebrate, bigCelebrate } from "@/lib/celebrate";
-
-export const Route = createFileRoute("/quiz")({
-  head: () => ({
-    meta: [
-      { title: "Daily quiz — Super Kids Learn" },
-      { name: "description", content: "10 fun questions across all topics. Earn stars and unlock badges!" },
-      { property: "og:title", content: "Daily quiz" },
-      { property: "og:description", content: "Earn stars and unlock badges." },
-    ],
-  }),
-  component: QuizPage,
-});
+import { SEO } from "@/components/SEO";
 
 interface MixedQ extends QuizQ { topic: string; }
 
@@ -23,7 +12,7 @@ function buildQuiz(): MixedQ[] {
   return [...all].sort(() => Math.random() - 0.5).slice(0, 10);
 }
 
-function QuizPage() {
+export default function QuizPage() {
   const [questions, setQuestions] = useState<MixedQ[]>(() => buildQuiz());
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -51,9 +40,6 @@ function QuizPage() {
     if (i + 1 >= total) {
       setDone(true);
       unlockBadge("first-quiz");
-      if (score + (picked === q.ans ? 0 : 0) === total) {
-        // already counted above; check perfect
-      }
       if (score === total) {
         unlockBadge("perfect-score");
         bigCelebrate();
@@ -81,6 +67,7 @@ function QuizPage() {
                         { e: "💪", t: "Keep trying!", m: "Practice makes perfect. Read a course and come back!" };
     return (
       <div className="mx-auto max-w-2xl px-4 py-12 text-center">
+        <SEO title="Quiz results — Super Kids Learn" />
         <div className="kid-card border-4 border-grape bg-card pop-in">
           <div className="text-7xl">{verdict.e}</div>
           <h1 className="font-display text-4xl mt-2">{verdict.t}</h1>
@@ -98,6 +85,7 @@ function QuizPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+      <SEO title="Daily quiz — Super Kids Learn" description="10 fun questions across all topics. Earn stars and unlock badges!" />
       <div className="flex items-center justify-between mb-3">
         <div className="pill bg-sky text-sky-foreground">Question {i + 1} of {total}</div>
         <div className="pill bg-sun text-sun-foreground">⭐ {score}</div>

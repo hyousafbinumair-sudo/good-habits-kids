@@ -1,18 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { COURSES } from "@/lib/courses";
 import { useProgress } from "@/components/SiteChrome";
-
-export const Route = createFileRoute("/courses/")({
-  head: () => ({
-    meta: [
-      { title: "All courses — Super Kids Learn" },
-      { name: "description", content: "Browse every Super Kids Learn course: civics, safety, health, math, science, manners and online safety." },
-      { property: "og:title", content: "All courses — Super Kids Learn" },
-      { property: "og:description", content: "Pick a course and earn shiny stars." },
-    ],
-  }),
-  component: CoursesIndex,
-});
+import { SEO } from "@/components/SEO";
 
 const COLOR_BG: Record<string, string> = {
   sun: "bg-sun text-sun-foreground border-sun",
@@ -23,10 +12,11 @@ const COLOR_BG: Record<string, string> = {
   bubblegum: "bg-bubblegum text-bubblegum-foreground border-bubblegum",
 };
 
-function CoursesIndex() {
+export default function CoursesIndex() {
   const p = useProgress();
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+      <SEO title="All courses — Super Kids Learn" description="Browse every Super Kids Learn course: civics, safety, health, math, science, manners and online safety." />
       <h1 className="font-display text-4xl sm:text-5xl">📚 All courses</h1>
       <p className="text-muted-foreground mt-2 max-w-prose">
         Each course has short lessons, a story, and a mini quiz. Finish lessons to earn ⭐.
@@ -37,12 +27,7 @@ function CoursesIndex() {
           const lessonsDone = p.completedLessons.filter((l) => l.startsWith(c.id + "/")).length;
           const pct = Math.round((lessonsDone / c.lessons.length) * 100);
           return (
-            <Link
-              key={c.id}
-              to="/courses/$courseId"
-              params={{ courseId: c.id }}
-              className={`kid-card border-4 ${COLOR_BG[c.color]}`}
-            >
+            <Link key={c.id} to={`/courses/${c.id}`} className={`kid-card border-4 ${COLOR_BG[c.color]}`}>
               <div className="text-5xl">{c.emoji}</div>
               <h2 className="font-display text-2xl mt-2">{c.title}</h2>
               <p className="opacity-90">{c.tagline}</p>

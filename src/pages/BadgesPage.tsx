@@ -1,29 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { useProgress } from "@/components/SiteChrome";
 import { BADGE_META, type BadgeId } from "@/lib/progress";
 import { COURSES } from "@/lib/courses";
-
-export const Route = createFileRoute("/badges")({
-  head: () => ({
-    meta: [
-      { title: "Your badges & stars — Super Kids Learn" },
-      { name: "description", content: "See your stars, streak and badges. Keep learning to unlock more!" },
-      { property: "og:title", content: "Your badges & stars" },
-      { property: "og:description", content: "Track stars, streaks and shiny rewards." },
-    ],
-  }),
-  component: BadgesPage,
-});
+import { SEO } from "@/components/SEO";
 
 const ALL_BADGES: BadgeId[] = [
   "first-visit", "first-quiz", "five-correct", "ten-correct", "perfect-score",
   "course-explorer", "all-courses", "streak-3", "streak-7",
 ];
 
-function BadgesPage() {
+export default function BadgesPage() {
   const p = useProgress();
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:py-12">
+      <SEO title="Your badges & stars — Super Kids Learn" description="See your stars, streak and badges. Keep learning to unlock more!" />
       <h1 className="font-display text-4xl sm:text-5xl">🏆 Your trophy room</h1>
 
       <div className="grid sm:grid-cols-3 gap-4 mt-6">
@@ -59,12 +49,7 @@ function BadgesPage() {
           const done = p.completedLessons.filter((l) => l.startsWith(c.id + "/")).length;
           const pct = Math.round((done / c.lessons.length) * 100);
           return (
-            <Link
-              key={c.id}
-              to="/courses/$courseId"
-              params={{ courseId: c.id }}
-              className="kid-card border-4 border-border bg-card hover:border-coral"
-            >
+            <Link key={c.id} to={`/courses/${c.id}`} className="kid-card border-4 border-border bg-card hover:border-coral">
               <div className="flex items-center gap-3">
                 <div className="text-4xl">{c.emoji}</div>
                 <div className="flex-1">

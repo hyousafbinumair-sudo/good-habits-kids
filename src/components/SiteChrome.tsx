@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, NavLink } from "react-router-dom";
 import { loadProgress, type Progress } from "@/lib/progress";
 
 export function useProgress() {
@@ -75,14 +75,17 @@ export function SiteHeader() {
 
 function NavItem({ to, children, onClick }: { to: string; children: React.ReactNode; onClick?: () => void }) {
   return (
-    <Link
+    <NavLink
       to={to}
       onClick={onClick}
-      className="px-3 py-2 rounded-full font-bold hover:bg-sun/40 transition-colors"
-      activeProps={{ className: "px-3 py-2 rounded-full font-bold bg-sun text-sun-foreground" }}
+      className={({ isActive }) =>
+        isActive
+          ? "px-3 py-2 rounded-full font-bold bg-sun text-sun-foreground"
+          : "px-3 py-2 rounded-full font-bold hover:bg-sun/40 transition-colors"
+      }
     >
       {children}
-    </Link>
+    </NavLink>
   );
 }
 

@@ -1,22 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useProgress } from "@/components/SiteChrome";
 import { setProfile, resetProgress } from "@/lib/progress";
 import { celebrate } from "@/lib/celebrate";
-
-export const Route = createFileRoute("/profile")({
-  head: () => ({
-    meta: [
-      { title: "Your profile — Super Kids Learn" },
-      { name: "description", content: "Pick your name and avatar. Your progress is saved on this device." },
-    ],
-  }),
-  component: ProfilePage,
-});
+import { SEO } from "@/components/SEO";
 
 const AVATARS = ["🦸", "🦹", "🧑‍🚀", "🧑‍🔬", "🧚", "🧙", "🦊", "🐼", "🐯", "🐱", "🐶", "🦄", "🐸", "🦉"];
 
-function ProfilePage() {
+export default function ProfilePage() {
   const p = useProgress();
   const [name, setName] = useState(p.name);
   const [avatar, setAvatar] = useState(p.avatar);
@@ -28,6 +18,7 @@ function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
+      <SEO title="Your profile — Super Kids Learn" description="Pick your name and avatar. Your progress is saved on this device." />
       <h1 className="font-display text-4xl">👤 Your profile</h1>
       <p className="text-muted-foreground mt-1">All saved on this device — no accounts.</p>
 

@@ -1,58 +1,33 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { Link, useParams } from "react-router-dom";
 import { getCourse } from "@/lib/courses";
 import { completeLesson } from "@/lib/progress";
 import { useProgress } from "@/components/SiteChrome";
 import { celebrate } from "@/lib/celebrate";
+import { SEO } from "@/components/SEO";
+import NotFound from "./NotFound";
 
-export const Route = createFileRoute("/courses/$courseId/$lessonId")({
-  loader: ({ params }) => {
-    const course = getCourse(params.courseId);
-    if (!course) throw notFound();
-    const lessonIdx = course.lessons.findIndex((l) => l.id === params.lessonId);
-    if (lessonIdx < 0) throw notFound();
-    return { course, lesson: course.lessons[lessonIdx], lessonIdx };
-  },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.lesson.title} — ${loaderData?.course.title}` },
-      { name: "description", content: loaderData?.lesson.intro ?? "" },
-      { property: "og:title", content: loaderData?.lesson.title ?? "" },
-      { property: "og:description", content: loaderData?.lesson.intro ?? "" },
-    ],
-  }),
-  notFoundComponent: () => (
-    <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-      <div className="text-6xl">🤷</div>
-      <h1 className="font-display text-3xl mt-2">Lesson not found</h1>
-      <Link to="/courses" className="kid-btn bg-coral text-coral-foreground mt-4 inline-block">
-        Back to courses
-      </Link>
-    </div>
-  ),
-  errorComponent: ({ error }) => (
-    <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-      <h1 className="font-display text-3xl">Oops</h1>
-      <p>{error.message}</p>
-    </div>
-  ),
-  component: LessonPage,
-});
-
-function LessonPage() {
-  const { course, lesson, lessonIdx } = Route.useLoaderData();
+export default function LessonPage() {
+  const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
+  const course = courseId ? getCourse(courseId) : undefined;
+  const lessonIdx = course && lessonId ? course.lessons.findIndex((l) => l.id === lessonId) : -1;
+  const lesson = course && lessonIdx >= 0 ? course.lessons[lessonIdx] : undefined;
   const p = useProgress();
+
+  if (!course || !lesson) return <NotFound />;
+
   const key = `${course.id}/${lesson.id}`;
   const done = p.completedLessons.includes(key);
   const next = course.lessons[lessonIdx + 1];
 
   function finish() {
-    completeLesson(course.id, lesson.id);
+    completeLesson(course!.id, lesson!.id);
     celebrate();
   }
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
-      <Link to="/courses/$courseId" params={{ courseId: course.id }} className="text-sm text-muted-foreground hover:underline">
+      <SEO title={`${lesson.title} — ${course.title}`} description={lesson.intro} />
+      <Link to={`/courses/${course.id}`} className="text-sm text-muted-foreground hover:underline">
         ← {course.title}
       </Link>
 
@@ -68,7 +43,7 @@ function LessonPage() {
       <div className="kid-card border-4 border-sky bg-card mt-5">
         <h2 className="font-display text-2xl">✨ Key ideas</h2>
         <ul className="mt-3 space-y-2">
-          {lesson.points.map((pt: { icon: string; text: string }, i: number) => (
+          {lesson.points.map((pt, i) => (
             <li key={i} className="flex items-start gap-3">
               <span className="text-2xl">{pt.icon}</span>
               <span className="pt-0.5">{pt.text}</span>
@@ -95,19 +70,11 @@ function LessonPage() {
           {done ? "✅ Completed (+2 ⭐)" : "I read this! +2 ⭐"}
         </button>
         {next ? (
-          <Link
-            to="/courses/$courseId/$lessonId"
-            params={{ courseId: course.id, lessonId: next.id }}
-            className="kid-btn bg-grape text-grape-foreground"
-          >
+          <Link to={`/courses/${course.id}/${next.id}`} className="kid-btn bg-grape text-grape-foreground">
             Next: {next.emoji} {next.title} →
           </Link>
         ) : (
-          <Link
-            to="/courses/$courseId"
-            params={{ courseId: course.id }}
-            className="kid-btn bg-grape text-grape-foreground"
-          >
+          <Link to={`/courses/${course.id}`} className="kid-btn bg-grape text-grape-foreground">
             🎉 Back to course
           </Link>
         )}

@@ -1,21 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { COURSES } from "@/lib/courses";
 import { useProgress } from "@/components/SiteChrome";
 import { BADGE_META } from "@/lib/progress";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Super Kids Learn — fun courses, games & quizzes for ages 6–9" },
-      {
-        name: "description",
-        content:
-          "Welcome! Pick a colourful course, play a game, or earn badges in the daily quiz.",
-      },
-    ],
-  }),
-  component: HomePage,
-});
+import { SEO } from "@/components/SEO";
 
 const COLOR_BG: Record<string, string> = {
   sun: "bg-sun text-sun-foreground border-sun",
@@ -26,12 +13,15 @@ const COLOR_BG: Record<string, string> = {
   bubblegum: "bg-bubblegum text-bubblegum-foreground border-bubblegum",
 };
 
-function HomePage() {
+export default function HomePage() {
   const p = useProgress();
   const recent = p.badges.slice(-4);
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
-      {/* HERO */}
+      <SEO
+        title="Super Kids Learn — fun courses, games & quizzes for ages 6–9"
+        description="Welcome! Pick a colourful course, play a game, or earn badges in the daily quiz."
+      />
       <section className="grid md:grid-cols-[1.2fr_1fr] gap-8 items-center">
         <div>
           <div className="pill bg-sun text-sun-foreground mb-3">🌟 Hi {p.name}!</div>
@@ -45,15 +35,9 @@ function HomePage() {
             Bite-size lessons, fun games, and a daily quiz — all made for super kids aged 6 to 9.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link to="/courses" className="kid-btn bg-coral text-coral-foreground text-lg">
-              🚀 Start learning
-            </Link>
-            <Link to="/games" className="kid-btn bg-mint text-mint-foreground text-lg">
-              🎮 Play a game
-            </Link>
-            <Link to="/quiz" className="kid-btn bg-grape text-grape-foreground text-lg">
-              🎯 Daily quiz
-            </Link>
+            <Link to="/courses" className="kid-btn bg-coral text-coral-foreground text-lg">🚀 Start learning</Link>
+            <Link to="/games" className="kid-btn bg-mint text-mint-foreground text-lg">🎮 Play a game</Link>
+            <Link to="/quiz" className="kid-btn bg-grape text-grape-foreground text-lg">🎯 Daily quiz</Link>
           </div>
         </div>
         <div className="relative">
@@ -77,7 +61,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* COURSES */}
       <section className="mt-16">
         <div className="flex items-end justify-between mb-6">
           <h2 className="font-display text-3xl sm:text-4xl">Pick a course 📚</h2>
@@ -90,8 +73,7 @@ function HomePage() {
             return (
               <Link
                 key={c.id}
-                to="/courses/$courseId"
-                params={{ courseId: c.id }}
+                to={`/courses/${c.id}`}
                 className={`kid-card wobble ${COLOR_BG[c.color]} border-4 group`}
               >
                 <div className="flex items-start justify-between">
@@ -110,29 +92,10 @@ function HomePage() {
         </div>
       </section>
 
-      {/* QUICK BLOCKS */}
       <section className="mt-16 grid sm:grid-cols-3 gap-5">
-        <FeatureBlock
-          to="/games"
-          color="bubblegum"
-          emoji="🎮"
-          title="Play games"
-          body="Memory match, sort the safe choices, and more."
-        />
-        <FeatureBlock
-          to="/quiz"
-          color="grape"
-          emoji="🎯"
-          title="Daily quiz"
-          body="10 random questions across every topic."
-        />
-        <FeatureBlock
-          to="/badges"
-          color="sun"
-          emoji="🏆"
-          title="Your badges"
-          body="Track stars, streaks and shiny rewards."
-        />
+        <FeatureBlock to="/games" color="bubblegum" emoji="🎮" title="Play games" body="Memory match, sort the safe choices, and more." />
+        <FeatureBlock to="/quiz" color="grape" emoji="🎯" title="Daily quiz" body="10 random questions across every topic." />
+        <FeatureBlock to="/badges" color="sun" emoji="🏆" title="Your badges" body="Track stars, streaks and shiny rewards." />
       </section>
     </div>
   );
@@ -148,19 +111,7 @@ function Stat({ label, value, emoji }: { label: string; value: number | string; 
   );
 }
 
-function FeatureBlock({
-  to,
-  color,
-  emoji,
-  title,
-  body,
-}: {
-  to: "/games" | "/quiz" | "/badges";
-  color: keyof typeof COLOR_BG;
-  emoji: string;
-  title: string;
-  body: string;
-}) {
+function FeatureBlock({ to, color, emoji, title, body }: { to: string; color: keyof typeof COLOR_BG; emoji: string; title: string; body: string }) {
   return (
     <Link to={to} className={`kid-card ${COLOR_BG[color]} border-4`}>
       <div className="text-4xl">{emoji}</div>
