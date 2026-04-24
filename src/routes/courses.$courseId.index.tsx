@@ -75,7 +75,7 @@ function CoursePage() {
 
       <h2 className="font-display text-2xl mt-8 mb-3">Lessons</h2>
       <ol className="space-y-3">
-        {course.lessons.map((l, i) => {
+        {course.lessons.map((l: { id: string; title: string; emoji: string }, i: number) => {
           const done = p.completedLessons.includes(`${course.id}/${l.id}`);
           return (
             <li key={l.id}>

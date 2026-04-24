@@ -68,7 +68,7 @@ function LessonPage() {
       <div className="kid-card border-4 border-sky bg-card mt-5">
         <h2 className="font-display text-2xl">✨ Key ideas</h2>
         <ul className="mt-3 space-y-2">
-          {lesson.points.map((pt, i) => (
+          {lesson.points.map((pt: { icon: string; text: string }, i: number) => (
             <li key={i} className="flex items-start gap-3">
               <span className="text-2xl">{pt.icon}</span>
               <span className="pt-0.5">{pt.text}</span>
