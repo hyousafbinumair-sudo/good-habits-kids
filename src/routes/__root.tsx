@@ -1,24 +1,18 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
+    <div className="flex min-h-[60vh] items-center justify-center px-4 text-center">
+      <div>
+        <div className="text-7xl mb-4">🧐</div>
+        <h1 className="font-display text-4xl">Page not found</h1>
+        <p className="mt-2 text-muted-foreground">This page wandered off to play.</p>
+        <Link to="/" className="kid-btn bg-coral text-coral-foreground mt-6 inline-block">
+          🏠 Go home
+        </Link>
       </div>
     </div>
   );
@@ -29,19 +23,25 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Super Kids Learn — fun lessons, games & quizzes for ages 6–9" },
+      {
+        name: "description",
+        content:
+          "A bright, kid-friendly learning hub. Courses on civics, safety, health, math, science, manners and online safety, plus games, quizzes and badges.",
+      },
+      { name: "author", content: "Super Kids Learn" },
+      { property: "og:title", content: "Super Kids Learn" },
+      { property: "og:description", content: "Fun courses, games and quizzes for kids 6–9." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;700;800&display=swap",
       },
     ],
   }),
@@ -65,5 +65,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <div className="min-h-screen flex flex-col">
+      <SiteHeader />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <SiteFooter />
+    </div>
+  );
 }
